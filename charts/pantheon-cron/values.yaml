@@ -1,0 +1,149 @@
+# Container configuration.
+image:
+  repository: ten7/pantheon-cron
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+#
+# Task runner configuration.
+#
+# Here is where you'll do most of your configuration for the task runner.
+#
+pantheon_cron:
+  config:
+  
+    # Turn on debugging output. 
+    #
+    # This can be useful to troubleshoot failing tasks.
+    # 
+    debug: false
+    
+    # Stop the entire cronjob if any one task fails.
+    #
+    # This can be useful to troubleshoot failing tasks.
+    # 
+    stopOnFailure: false
+ 
+    # Dictionary of Pantheon sites from which to to run tasks.
+    #
+    # The key name (example.com) below, need not be site URL, it can be any 
+    # valid key in YAML. Configurations here are referenced by key name in the
+    # `pantheon_cron.config.tasks` value.
+    #
+    sites:
+      # example.com:
+      #   site_id: '12345678-abcd-ef01-2345-67890abcdef0'
+      #   machineTokenFile: "/path/to/pantheon-machine-token.txt"
+      #   keyFile: "/config/example-com/id_pantheon"
+      #   pubKeyFile: "/config/example-com/id_pantheon.pub"
+      #   retryCount: 3
+      #   retryDelay: 30
+      #
+      ## Where, in each entry:
+      ## * `site_id` is the Pantheon site ID. Required.
+      ## * `machineTokenFile` is the path to a file containing the Pantheon machine token. Optional if `machineToken` is specified.
+      ## * `machineToken` contains the Pantheon Machine token. Ignored if `machineTokenFile` is specified.
+      ## * `keyFile` is the path to an SSH private key used to access the Pantheon site.
+      ## * `pubKeyFile` is the path to an SSH public key used to access the Pantheon site.
+      ## * `retryCount` is the number of time to retry `terminus` commands if they fail. Optional, defaults to `3`.
+      ## * `retryDelay` is the time in seconds to wait before retrying a failed `terminus` command. Optional, defaults to `30`.
+
+    # List of tasks to perform in sequence
+    #
+    # The `pantheon_cron.tasks` list specifies the tasks to ultimately perform, referencing the `pantheon_cron.sites` section for connectivity details.
+    #
+    tasks:
+      # - name: "example.com cron and cr"
+      #   site: "example.com"
+      #   env: "live"
+      #   disabled: false
+      #   commands: []
+      #     - command: "remote:drush"
+      #       arg: "cron"
+      #       disabled: false
+      #     - command: "remote:drush"
+      #       arg: "cr"
+      #       disabled: false
+      #
+      ## Where:
+      ## * `name` is the display name of the backup. Optional, but makes the logs easier.
+      ## * `site` is the name of the key under `pantheon_crons.sites` on which to execute tasks. Required.
+      ## * `env` is the Pantheon environment of the site on which to execute the task. Required.
+      ## * `disabled` is `true` to disable (skip) the task. Optional, defaults to `false`.
+      ## * `commands` is a list of `terminus` commands and their arguments to perform in sequence. Required.
+      #
+      ## For each item in `commands`:
+      ##  * `command` is the `terminus` command to perform, typically `remote:drush` or `remote:wp`. Required.
+      ##  * `arg` is a string to pass to the Terminus command. Required
+      ##  * `disabled` is `true` to skip executing the commad. Optional, defaults to `false`.
+      
+# Defines the cronjob.
+cronjob:
+  schedule: "0 0 * * *"
+  concurrencyPolicy: "Forbid"
+  restartPolicy: "Never"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+
+# Additional volumes to add to the pantheon-cron cronjob.
+#
+# Use this to define additional secrets which contain S3 or SFTP credientals.
+extraVolumes:
+# - name: vol-secret-my-example-bucket
+#   secret:
+#     defaultMode: 420
+#     secretName: my-example-bucket
+# - name: vol-secret-example-key
+#   secret:
+#     defaultMode: 420
+#     secretName: example-key
+
+
+# Additional volumes to mount.
+extraVolumeMounts:
+# - name: vol-secret-my-example-bucket
+#   mountPath: "/config/my-example-bucket"
+# - name: vol-secret-example-key
+#   mountPath: "/config/example-key"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

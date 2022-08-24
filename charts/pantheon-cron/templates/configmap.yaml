@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  pantheon-cron.yml: |
+    pantheon_cron:
+      debug: {{ .Values.pantheon_cron.config.debug | quote }}
+      {{- with .Values.pantheon_cron.config.sources }}
+      sources:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.pantheon_cron.config.remotes }}
+      remotes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.pantheon_cron.config.crons }}
+      crons:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace | quote }}
+  name: {{ template "pantheon-cron.fullname" . }}-config
+
