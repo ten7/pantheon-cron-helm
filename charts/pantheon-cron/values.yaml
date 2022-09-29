@@ -52,6 +52,20 @@ pantheon_cron:
       ## * `retryCount` is the number of time to retry `terminus` commands if they fail. Optional, defaults to `3`.
       ## * `retryDelay` is the time in seconds to wait before retrying a failed `terminus` command. Optional, defaults to `30`.
 
+    # Dictionary of alert services to notifier when a cron job completes successfully.
+    notifiers:
+      # my-http-ping:
+      #   type: "httpPing"
+      #   url: "ping.example.com/path-to-healthcheck-url"
+      # send-to-output:
+      #   type: "debug"
+      # 
+      ## Where:
+      ## * `type` is the type of notifier such as `httpPing` and `debug`. Required.
+      ## 
+      ## For `httpPing` type notifiers:
+      ## * `url` is the URL to the HTTP healthcheck URL. 
+
     # List of tasks to perform in sequence
     #
     # The `pantheon_cron.tasks` list specifies the tasks to ultimately perform, referencing the `pantheon_cron.sites` section for connectivity details.
@@ -65,9 +79,16 @@ pantheon_cron:
       #     - command: "remote:drush"
       #       arg: "cron"
       #       disabled: false
+      #       notify:
+      #         - notifier: my-http-ping
+      #           disabled: false
       #     - command: "remote:drush"
       #       arg: "cr"
       #       disabled: false
+      #       notify:
+      #         - notifier: "send-to-output"
+      #           msg: "A message"
+      #           disabled: false
       #
       ## Where:
       ## * `name` is the display name of the backup. Optional, but makes the logs easier.
@@ -80,6 +101,12 @@ pantheon_cron:
       ##  * `command` is the `terminus` command to perform, typically `remote:drush` or `remote:wp`. Required.
       ##  * `arg` is a string to pass to the Terminus command. Required
       ##  * `disabled` is `true` to skip executing the commad. Optional, defaults to `false`.
+      ##  * `notify` is a list of notification services to alert.
+      #
+      ## For each item under `notify`:
+      ## * `notifier` is the name of the notifier under `pantheon_cron.notifiers`. Required.
+      ## * `disabled` is `true` to skip alerting the notifier. Optional, defaults to `false`.
+      ## * `msg` is an the message to display for `debug` type notifiers. Optional.
       
 # Defines the cronjob.
 cronjob:
