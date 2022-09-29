@@ -3,16 +3,13 @@ data:
   pantheon-cron.yml: |
     pantheon_cron:
       debug: {{ .Values.pantheon_cron.config.debug | quote }}
-      {{- with .Values.pantheon_cron.config.sources }}
-      sources:
+      stopOnFailure: {{ .Values.pantheon_cron.config.stopOnFailure | quote }}
+      {{- with .Values.pantheon_cron.config.sites }}
+      sites:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.pantheon_cron.config.remotes }}
-      remotes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.pantheon_cron.config.crons }}
-      crons:
+      {{- with .Values.pantheon_cron.config.tasks }}
+      tasks:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 
