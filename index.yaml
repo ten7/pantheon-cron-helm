@@ -2,6 +2,17 @@ apiVersion: v1
 entries:
   pantheon-cron:
   - apiVersion: v2
+    appVersion: 1.1.1
+    created: "2022-09-29T17:22:33.893806372Z"
+    description: A Helm chart to automate running tasks on Pantheon sites via terminus
+      on Kubernetes
+    digest: 50458db49e2cbf9f08f8359122b0adde21588c1360185d987ac03204f7757622
+    name: pantheon-cron
+    type: application
+    urls:
+    - https://ten7.github.io/pantheon-cron-helm/pantheon-cron-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v2
     appVersion: 1.1.0
     created: "2022-09-29T17:08:07.461524725Z"
     description: A Helm chart to automate running tasks on Pantheon sites via terminus
@@ -34,4 +45,4 @@ entries:
     urls:
     - https://ten7.github.io/pantheon-cron-helm/pantheon-cron-1.0.0.tgz
     version: 1.0.0
-generated: "2022-09-29T17:08:07.460000312Z"
+generated: "2022-09-29T17:22:33.891852461Z"
