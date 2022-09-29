@@ -8,6 +8,10 @@ data:
       sites:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.pantheon_cron.config.notifiers }}
+      notifiers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.pantheon_cron.config.tasks }}
       tasks:
         {{- toYaml . | nindent 8 }}
